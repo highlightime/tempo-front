@@ -9,6 +9,8 @@ const Home: NextPage = () => {
         <meta name="description" content="Find your Lover with Tempo" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <div>This is home.</div>
     </div>
   );
 };
