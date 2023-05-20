@@ -2,6 +2,9 @@
 
 const Dotenv = require("dotenv-webpack");
 const nextConfig = {
+  images: {
+    domains: ["fastly.picsum.photos", "*"],
+  },
   reactStrictMode: true,
   swcMinify: true,
   webpack: (config) => {
@@ -9,6 +12,6 @@ const nextConfig = {
 
     return config;
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
