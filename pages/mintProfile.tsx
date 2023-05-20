@@ -3,18 +3,13 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  FormErrorMessage,
   FormHelperText,
   Input,
-  InputGroup,
-  InputLeftAddon,
   Select,
   Button,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { SignUpFormProps } from "../types/SignUpType";
-import axios from "axios";
-import { useRouter } from "next/router";
 import { NFTStorage } from "nft.storage";
 import { MintContractAddr } from "../contracts/ContractAddress";
 import contract from "../contracts/MintNFT.json";
@@ -25,7 +20,6 @@ const CONTRACT_ABI = contract.abi;
 
 const SignUp = () => {
   const { register, handleSubmit } = useForm<SignUpFormProps>();
-  const router = useRouter();
 
   const genderOptions: String[] = [
     "Male",
@@ -49,23 +43,6 @@ const SignUp = () => {
   ];
 
   const onSubmit = async (data: SignUpFormProps) => {
-    const formData = new FormData();
-
-    formData.append("file", data.profileImage);
-    formData.append("text", data.firstName);
-    formData.append("text", data.lastName);
-    formData.append("text", data.birth);
-    formData.append("text", data.gender);
-    formData.append("text", data.area);
-    // if (data.inspectionResult) formData.append("file2", data.inspectionResult);
-
-    const result = await axios(`/api/signUp`, {
-      method: "POST",
-      data: formData,
-    });
-
-    router.push("/mintProgress");
-
     handleImg(data);
   };
 
@@ -76,8 +53,7 @@ const SignUp = () => {
       name: "Test Name",
       description: "Test Desc",
       properties: {
-        category: data.firstName,
-        authors: data.lastName,
+        authors: data.nickname,
       },
     };
 
@@ -151,8 +127,11 @@ const SignUp = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <form onSubmit={handleSubmit(async (data) => onSubmit(data))}>
-          <FormControl w="50vw" /*isRequired*/>
+        <form
+          onSubmit={handleSubmit(async (data) => onSubmit(data))}
+          style={{ display: "flex", flexDirection: "column" }}
+        >
+          <FormControl w="50vw" isRequired>
             <FormLabel>Profile Image</FormLabel>
             <Input
               type="file"
@@ -161,22 +140,20 @@ const SignUp = () => {
             />
             <FormHelperText>Only jpg, png</FormHelperText>
           </FormControl>
-          <FormControl w="50vw" mt="5" /*isRequired*/>
-            <FormLabel>Name</FormLabel>
-            <InputGroup>
-              <InputLeftAddon children="First Name" />
-              <Input type="text" {...register("firstName")} />
-              <Box mx="2" />
-              <InputLeftAddon children="Last Name" />
-              <Input type="text" {...register("lastName")} />
-            </InputGroup>
+          <FormControl w="50vw" mt="5" isRequired>
+            <FormLabel>Nickname</FormLabel>
+            <Input
+              type="text"
+              {...register("nickname")}
+              placeholder="Input Nickname."
+            />
           </FormControl>
-          <FormControl w="50vw" mt="5" /*isRequired*/>
+          <FormControl w="50vw" mt="5" isRequired>
             <FormLabel>Birth</FormLabel>
             <Input type="date" {...register("birth")} />
             <FormHelperText>We'll never share your email.</FormHelperText>
           </FormControl>
-          <FormControl w="50vw" mt="5" /*isRequired*/>
+          <FormControl w="50vw" mt="5" isRequired>
             <FormLabel>Gender</FormLabel>
             <Select placeholder="Select Gender" {...register("gender")}>
               {genderOptions.map((gender) => (
@@ -186,7 +163,7 @@ const SignUp = () => {
               ))}
             </Select>
           </FormControl>
-          <FormControl w="50vw" mt="5" /*isRequired*/>
+          {/* <FormControl w="50vw" mt="5">
             <FormLabel>Area</FormLabel>
             <Select placeholder="Select Area" {...register("area")}>
               {areaOptions.map((area) => (
@@ -195,7 +172,7 @@ const SignUp = () => {
                 </option>
               ))}
             </Select>
-          </FormControl>
+          </FormControl> */}
           <FormControl w="50vw" mt="5">
             <FormLabel>Inspection Result</FormLabel>
             <Input
@@ -204,7 +181,9 @@ const SignUp = () => {
               {...register("inspectionResult")}
             />
           </FormControl>
-          <Button type="submit">Sign Up</Button>
+          <Button type="submit" mt="8">
+            Mint!
+          </Button>
         </form>
       </Flex>
     </Box>
