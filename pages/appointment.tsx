@@ -161,7 +161,7 @@ const Appointment = () => {
 
           <FormControl w="50%" mt="5">
             <InputGroup>
-              <InputLeftAddon children="약속 일자" />
+              <InputLeftAddon>약속 일자</InputLeftAddon>
               <Input
                 placeholder="Select Date and Time"
                 size="md"
