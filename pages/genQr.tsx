@@ -21,6 +21,13 @@ const GenQr = () => {
   const [qrValue, setQrValue] = useState("");
 
   const generateQr = (data: QrInputProps) => {
+    const encrypted = encrypt(JSON.stringify(data));
+
+    const decrypted = decrypt(encrypted);
+
+    console.log("encrypted : ", encrypted);
+    console.log("decrypted : ", decrypted);
+
     setQrValue(encrypt(JSON.stringify(data)));
   };
 
