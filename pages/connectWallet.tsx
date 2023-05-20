@@ -1,15 +1,22 @@
 import { useWeb3ConnectionContext } from "../context/web3Connection";
-// import styled from 'styled-components';
 import { NoCoreWalletError } from "@avalabs/web3-react-core-connector";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
 import CoreNotFoundError from "../components/CoreNotFoundError";
+import { walletState } from "../components/states";
+import { useRecoilState } from "recoil";
 
 const SignIn = () => {
   const { connector, useIsActive, useAccount } = useWeb3ConnectionContext();
   const isActive = useIsActive();
   const activeAccount = useAccount();
   const [activationError, setActivationError] = useState<Error>();
+
+  const [_, setWalletAddress] = useRecoilState(walletState);
+
+  useEffect(() => {
+    if (activeAccount) setWalletAddress(activeAccount);
+  }, [activeAccount]);
 
   if (activationError instanceof NoCoreWalletError) {
     return (
