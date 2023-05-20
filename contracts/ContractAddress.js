@@ -7,5 +7,5 @@ export const MintContractAddr = () => {
 };
 
 export const AppointmentContractAddr = () => {
-  return "0xc50689E598e9bBa1E81d2Ddc67A265CB75975A12";
+  return "0x11227D571C56550862e0ae10122a2F5Aa96089FB";
 };

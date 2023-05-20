@@ -72,7 +72,7 @@ const Appointment = () => {
 
     console.log(data);
 
-    // checkWalletIsConnected(address, receiver, data.time);
+    checkWalletIsConnected(address, receiver, data.time);
   };
 
   const checkWalletIsConnected = async (location, receiver, atime) => {
