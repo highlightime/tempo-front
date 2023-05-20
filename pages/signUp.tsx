@@ -41,13 +41,19 @@ const SignUp = () => {
 
   useEffect(() => {
     (async () => {
-      provider = new ethers.JsonRpcProvider(process.env.API_URL!);
+      if (walletAddress) {
+        provider = new ethers.JsonRpcProvider(process.env.API_URL!);
 
-      signer = new ethers.JsonRpcSigner(provider, walletAddress);
+        signer = new ethers.JsonRpcSigner(provider, walletAddress);
 
-      myContract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+        myContract = new ethers.Contract(
+          CONTRACT_ADDRESS,
+          CONTRACT_ABI,
+          signer
+        );
+      }
     })();
-  }, []);
+  }, [walletAddress]);
 
   const onSubmit = async (data: UserProps) => {
     try {
