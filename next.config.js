@@ -12,6 +12,7 @@ const nextConfig = {
 
     return config;
   },
+  basePath: "/tempo-front",
 };
 
 module.exports = nextConfig;
