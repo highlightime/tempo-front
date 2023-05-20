@@ -28,6 +28,7 @@ const navItems: NavItem[] = [
   { name: "appointment", to: "/appointment", requireLogin: true },
   { name: "approve", to: "/approveAppointment", requireLogin: true },
   { name: "view appointment", to: "/viewAppointment", requireLogin: true },
+  { name: "QR", to: "/genQr", requireLogin: true },
 ];
 
 const NavLink = (item: NavItem) => (

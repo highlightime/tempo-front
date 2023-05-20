@@ -6,6 +6,7 @@ import {
   FormControl,
   Input,
   FormLabel,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { ethers } from "ethers";
@@ -27,7 +28,11 @@ const SignIn = () => {
   const [walletAddress, setWalletAddress] = useRecoilState(walletState);
   const email = useRecoilValue(userState);
 
-  const { register, handleSubmit } = useForm<UserProps>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserProps>();
   const [provider, setProvider] = useState<ethers.providers.Web3Provider>();
   const [signer, setSigner] = useState<ethers.providers.JsonRpcSigner>();
 
@@ -162,8 +167,26 @@ const SignIn = () => {
               <Input
                 type="password"
                 placeholder="Input Password."
-                {...register("password")}
+                {...register("password", {
+                  pattern: {
+                    value:
+                      /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
+                    message:
+                      "Please enter at least one letter each for English, special, and number.",
+                  },
+                  minLength: {
+                    value: 8,
+                    message: "Password is at least 8 digits long.",
+                  },
+                  maxLength: {
+                    value: 15,
+                    message: "The password can be up to 15 digits.",
+                  },
+                })}
               />
+              {errors.password && (
+                <FormErrorMessage>{errors.password.message}</FormErrorMessage>
+              )}
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Password Confirm</FormLabel>
