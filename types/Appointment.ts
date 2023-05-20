@@ -1,5 +1,5 @@
 export interface AppointmentProps {
-  address?: string;
+  location?: string;
   time?: string;
   sender: string;
   receiver: string;

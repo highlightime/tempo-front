@@ -16,6 +16,12 @@ import { SignUpFormProps } from "../types/SignUpType";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { NFTStorage } from "nft.storage";
+import { MintContractAddr } from "../contracts/ContractAddress";
+import contract from "../contracts/MintNFT.json";
+import { ethers } from "ethers";
+
+const CONTRACT_ADDRESS = MintContractAddr();
+const CONTRACT_ABI = contract.abi;
 
 const SignUp = () => {
   const { register, handleSubmit } = useForm<SignUpFormProps>();
@@ -82,7 +88,61 @@ const SignUp = () => {
     // NFT data stored
     console.log("Metadata URI: ", metadata.url);
 
-    //mintProfileHandler(metadata.url, process.env.MY_WALLET_EVM_ADDRESS || "");
+    checkWalletIsConnected(metadata.url);
+  }
+
+  const checkWalletIsConnected = async (metadataUrl) => {
+    const { ethereum } = window;
+
+    if (!ethereum || !ethereum.request) {
+      alert("Please install MetaMask!");
+    }
+
+    // @ts-ignore
+    const accounts = await ethereum.request({
+      method: "eth_requestAccounts",
+    });
+
+    if (accounts.length !== 0) {
+      // wallet connect
+      const account = accounts[0];
+      
+      // mint image we made
+      mintNftHandler(metadataUrl,account);
+    } else {
+      console.log("No Authrized Account.");
+    }
+  };
+
+  async function mintNftHandler(metadataUrl,currentAccount) {
+    try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+
+        //console.log(CONTRACT_ADDRESS,currentAccount);
+
+        const nftContract = new ethers.Contract(
+            CONTRACT_ADDRESS,
+            CONTRACT_ABI,
+            signer
+        );
+
+        let nftTxn = await nftContract.mintProfile(
+          currentAccount,
+          metadataUrl
+        );
+        // wait transaction mined
+        await nftTxn.wait();
+      
+      } else {
+        console.log("Ether obj not exists");
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return (

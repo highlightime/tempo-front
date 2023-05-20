@@ -13,6 +13,12 @@ import { useEffect, useState } from "react";
 import { Coordinates } from "../types/Geolocation";
 import { AppointmentProps } from "../types/Appointment";
 import { useForm } from "react-hook-form";
+import { AppointmentContractAddr } from "../contracts/ContractAddress";
+import contract from "../contracts/AppointmentContract.json";
+import { ethers } from "ethers";
+
+const CONTRACT_ADDRESS = AppointmentContractAddr();
+const CONTRACT_ABI = contract.abi;
 
 const Appointment = () => {
   const initPosition = {
@@ -21,7 +27,7 @@ const Appointment = () => {
   };
 
   // TODO
-  const [receiver, sender] = ["receiver", "sender"];
+  const [receiver, sender] = ["0x7eB20590eF39cea2041B7570233607f15da82a3b", "sender"];
 
   const { loaded, coordinates, error } = useGeolocation();
   const [centerPosition, setCenterPosition] =
@@ -57,12 +63,70 @@ const Appointment = () => {
   };
 
   const onSubmit = (data: AppointmentProps) => {
-    data.address = address;
+    data.location = address;
     data.sender = sender;
     data.receiver = receiver;
 
     console.log(data);
+
+    checkWalletIsConnected(address, receiver, data.time);
   };
+
+  const checkWalletIsConnected = async (location, receiver, atime) => {
+    const { ethereum } = window;
+
+    if (!ethereum || !ethereum.request) {
+      alert("Please install MetaMask!");
+    }
+
+    // @ts-ignore
+    const accounts = await ethereum.request({
+      method: "eth_requestAccounts",
+    });
+
+    if (accounts.length !== 0) {
+      // wallet connect
+      const account = accounts[0];
+      
+      // createAppointment
+      createAppointment(location, receiver, atime);
+    } else {
+      console.log("No Authrized Account.");
+    }
+  };
+
+  async function createAppointment(location, receiver,atime) {
+    try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+
+        //console.log(CONTRACT_ADDRESS,currentAccount);
+
+        const appointmentContract = new ethers.Contract(
+            CONTRACT_ADDRESS,
+            CONTRACT_ABI,
+            signer
+        );
+
+        let createAppointmentTxn = await appointmentContract.createAppointment(
+          receiver,
+          location,
+          atime,
+          atime
+        );
+        // wait transaction mined
+        await createAppointmentTxn.wait();
+      
+      } else {
+        console.log("Ether obj not exists");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   return (
     <Box w="100%">
