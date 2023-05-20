@@ -1,3 +1,4 @@
+import { Box, Flex, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 
@@ -10,7 +11,17 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div>This is home.</div>
+      <Box w="100%">
+        <Flex
+          height="90vh"
+          justifyContent="center"
+          alignItems="center"
+          flexDir="column"
+        >
+          <Box fontSize="6xl">Tempo</Box>
+          <Text fontSize="2xl">Where you can find your lover</Text>
+        </Flex>
+      </Box>
     </div>
   );
 };
