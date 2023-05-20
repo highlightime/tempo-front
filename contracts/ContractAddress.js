@@ -3,7 +3,7 @@ export const UserAuthContractAddr = () => {
 };
 
 export const MintContractAddr = () => {
-  return "0xA371599f2629fd1307764a4Bd29A91102B69d9bd";
+  return "0xda77F70aab80ea5395034829E161B4800061B8E0";
 };
 
 export const AppointmentContractAddr = () => {
