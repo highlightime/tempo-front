@@ -20,8 +20,8 @@ import { NavItem } from "../types/NavItem";
 
 const navItems: NavItem[] = [
   { name: "Tempo", to: "/" },
-  { name: "Sign In", to: "/signIn" },
-  { name: "Sign Up", to: "/signUp" },
+  { name: "Connect Wallet", to: "/connectWallet" },
+  { name: "Mint Profile", to: "/mintProfile" },
 ];
 
 const NavLink = (item: NavItem) => (
