@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -8,7 +8,6 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import UserAuth from "../contracts/UserAuth.json";
@@ -53,8 +52,11 @@ const SignIn = () => {
         passwordBytes
       );
 
-      router.push("/find");
-    } catch (e) {}
+      alert("Sign Up Success!");
+      router.push("/signIn");
+    } catch (e) {
+      alert("Sign Up Failed... Try Again");
+    }
   };
 
   const checkIsRegistered = async (
@@ -89,8 +91,7 @@ const SignIn = () => {
         })
         .then((result) => {
           if (result) {
-            // 등록된 유저
-            router.push("/find");
+            router.push("/signIn");
           }
         });
     } catch (error) {

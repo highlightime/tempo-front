@@ -7,9 +7,12 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { auth } from "../lib/Firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/router";
+import { ethers } from "ethers";
+import UserAuth from "../contracts/UserAuth.json";
+import { UserAuthContractAddr } from "../contracts/ContractAddress";
+import { userState } from "../components/states";
+import { useRecoilState } from "recoil";
 
 interface UserProps {
   email: string;
@@ -19,15 +22,55 @@ interface UserProps {
 
 const SignIn = () => {
   const { register, handleSubmit } = useForm<UserProps>();
+  const [email, setEmail] = useRecoilState(userState);
 
   const router = useRouter();
 
-  const onSubmit = async (data: UserProps) => {
+  const signIn = async ({ email, password }) => {
     try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
+      const provider = getProvider();
+      const signer = await getSigner(provider);
 
-      router.push("/");
-    } catch (error) {}
+      const CONTRACT_ADDRESS = UserAuthContractAddr();
+      const CONTRACT_ABI = UserAuth.abi;
+
+      const emailBytes = ethers.utils.formatBytes32String(email);
+      const passwordBytes = ethers.utils.formatBytes32String(password);
+
+      const contract = new ethers.Contract(
+        CONTRACT_ADDRESS,
+        CONTRACT_ABI,
+        signer
+      );
+
+      const authenticateUserContract = await contract.authenticateUser(
+        emailBytes,
+        passwordBytes
+      );
+
+      if (authenticateUserContract) {
+        setEmail(email);
+        router.push("/");
+      } else {
+        alert("Invalid Email or password");
+      }
+    } catch (error) {
+      alert("login failed...");
+    }
+  };
+
+  const onSubmit = async (data: UserProps) => {
+    await signIn({ ...data });
+  };
+
+  const getProvider = () => {
+    return new ethers.providers.Web3Provider(window.ethereum);
+  };
+
+  const getSigner = async (provider: ethers.providers.Web3Provider) => {
+    await provider.send("eth_requestAccounts", []);
+
+    return provider.getSigner();
   };
 
   return (

@@ -15,10 +15,10 @@ import {
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { NavItem } from "../types/NavItem";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../lib/Firebase";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { userState, walletState } from "./states";
+import { useRecoilState } from "recoil";
 
 const navItems: NavItem[] = [
   { name: "Tempo", to: "/" },
@@ -46,11 +46,14 @@ const NavLink = (item: NavItem) => (
 const Navbar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
 
-  const [user] = useAuthState(auth);
   const router = useRouter();
 
+  const [email, setEmail] = useRecoilState(userState);
+  const [walletAddress, setWalletAddress] = useRecoilState(walletState);
+
   const signOut = () => {
-    auth.signOut();
+    setEmail("");
+    setWalletAddress("");
     router.push("/");
   };
 
@@ -70,7 +73,7 @@ const Navbar = () => {
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               </Button>
 
-              {user ? (
+              {email ? (
                 <Menu>
                   <MenuButton
                     as={Button}
@@ -96,11 +99,10 @@ const Navbar = () => {
                     </Center>
                     <br />
                     <Center>
-                      <p>Username</p>
+                      <p>{email}</p>
                     </Center>
                     <br />
                     <MenuDivider />
-                    <MenuItem>Your Servers</MenuItem>
                     <MenuItem>Account Settings</MenuItem>
                     <MenuItem onClick={signOut}>Logout</MenuItem>
                   </MenuList>
