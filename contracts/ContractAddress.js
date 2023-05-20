@@ -1,3 +1,3 @@
 export const UserAuthContractAddr = () => {
-    return "0x44b1c7593F24Ac6aCEcd88FF0F09b0Cb00C6Cdd0";
-  };
+  return "0xB9A89868bF63c3b77F87adD5deF4b92420359190";
+};

@@ -1,11 +1,8 @@
-import { useWeb3ConnectionContext } from "../context/web3Connection";
-import { NoCoreWalletError } from "@avalabs/web3-react-core-connector";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Box,
   Button,
   Flex,
-  Text,
   FormControl,
   Input,
   FormLabel,
@@ -34,7 +31,8 @@ const SignIn = () => {
 
   const onSubmit = async (data: UserProps) => {
     const result = await axios("/api/connect", {
-      method: "get",
+      method: "post",
+      data: { ...data, walletAddress },
     });
   };
 

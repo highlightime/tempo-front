@@ -7,18 +7,6 @@
   resolved "https://registry.yarnpkg.com/@assemblyscript/loader/-/loader-0.9.4.tgz#a483c54c1253656bb33babd464e3154a173e1577"
   integrity sha512-HazVq9zwTVwGmqdwYzu7WyQ6FQVZ7SwET0KKQuKm55jD0IfUpZgN0OPIiZG3zV1iSrVYcN0bdwLRXI/VNCYsUA==
 
-"@avalabs/avalanche-connector@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@avalabs/avalanche-connector/-/avalanche-connector-1.0.0.tgz#f43f5272500652e6b393ba09e5affc701d276396"
-  integrity sha512-FD/CE4OWLQJtTpnrFuKXtxnMr8SWkXWzey8Fa/Sx79m2VN6hJzD3yFtbGcnQw66mJHIJ7hYrrNWcDRrqnGvxwg==
-
-"@avalabs/web3-react-core-connector@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@avalabs/web3-react-core-connector/-/web3-react-core-connector-1.1.1.tgz#eb79ec646b7c5cb39243d4ed124f6bc557bfa571"
-  integrity sha512-2rjRNNYWOZLWpdnDW+kpZ99DTpwWhnu+VG+pUzUG4qv/rdG+ngGR1mkYbQ9Q/7WC83H2qkY1rgAc63CiFm/eGg==
-  dependencies:
-    "@web3-react/types" "8.1.2-beta.0"
-
 "@babel/code-frame@^7.0.0":
   version "7.21.4"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.21.4.tgz#d0fa9e4413aca81f2b23b9442797bda1826edb39"
@@ -2348,13 +2336,6 @@
   dependencies:
     "@ethersproject/address" "^5"
     "@web3-react/types" "^8.2.0"
-    zustand "^4.3.5"
-
-"@web3-react/types@8.1.2-beta.0":
-  version "8.1.2-beta.0"
-  resolved "https://registry.yarnpkg.com/@web3-react/types/-/types-8.1.2-beta.0.tgz#439e3a539688e91b677a3959d2e1bf56c33eaa96"
-  integrity sha512-gvVJqRvGsABpoUZA7RWQQiOq5qv5exkUW6ouSjlO4Q5BkfCBgT4NlIUVQ91w3JnS5qkDpk/uKDMt+wDFw0Yssw==
-  dependencies:
     zustand "^4.3.5"
 
 "@web3-react/types@^8.1.2-beta.0", "@web3-react/types@^8.2.0":
