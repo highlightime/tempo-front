@@ -22,6 +22,7 @@ const navItems: NavItem[] = [
   { name: "Tempo", to: "/" },
   { name: "Connect Wallet", to: "/connectWallet" },
   { name: "Mint Profile", to: "/mintProfile" },
+  { name: "Find", to: "/find" },
 ];
 
 const NavLink = (item: NavItem) => (
