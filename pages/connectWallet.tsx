@@ -11,6 +11,10 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
+import UserAuth from "../contracts/UserAuth.json";
+import { UserAuthContractAddr } from "../contracts/ContractAddress";
+import { walletState } from "../components/states";
+import { useRecoilState } from "recoil";
 
 interface UserProps {
   email: string;
@@ -21,19 +25,51 @@ interface UserProps {
 const SignIn = () => {
   const router = useRouter();
 
+  const [walletAddress, setWalletAddress] = useRecoilState(walletState);
+
   const { register, handleSubmit } = useForm<UserProps>();
   const [provider, setProvider] = useState<ethers.providers.Web3Provider>();
   const [signer, setSigner] = useState<ethers.providers.JsonRpcSigner>();
 
-  const [walletAddress, setWalletAddress] = useState<string>();
   const [currentBalance, setCurrentBalance] = useState<number>();
   const [chainId, setChainId] = useState<number>();
 
+  const CONTRACT_ADDRESS = UserAuthContractAddr();
+  const CONTRACT_ABI = UserAuth.abi;
+
   const onSubmit = async (data: UserProps) => {
-    const result = await axios("/api/connect", {
-      method: "post",
-      data: { ...data, walletAddress },
-    });
+    const contract = new ethers.Contract(
+      CONTRACT_ADDRESS,
+      CONTRACT_ABI,
+      signer
+    );
+
+    const emailBytes = ethers.utils.formatBytes32String(data.email);
+    const passwordBytes = ethers.utils.formatBytes32String(data.password);
+
+    try {
+      const registerUserContract = await contract.registerUser(
+        emailBytes,
+        passwordBytes
+      );
+
+      router.push("/find");
+    } catch (e) {}
+  };
+
+  const checkIsRegistered = async (
+    signer: ethers.providers.JsonRpcSigner,
+    walletAddress: string
+  ): Promise<boolean> => {
+    const contract = new ethers.Contract(
+      CONTRACT_ADDRESS,
+      CONTRACT_ABI,
+      signer
+    );
+
+    const isRegisteredContract = await contract.isRegistered(walletAddress);
+
+    return isRegisteredContract;
   };
 
   const connectWallet = useCallback(async () => {
@@ -45,16 +81,25 @@ const SignIn = () => {
         );
       }
 
-      const _provider = await getProvider();
+      const _provider = getProvider();
       const _signer = await getSigner(_provider);
-      await getWalletData(_signer);
+      getWalletData(_signer)
+        .then((walletAddress) => {
+          return checkIsRegistered(_signer, walletAddress);
+        })
+        .then((result) => {
+          if (result) {
+            // 등록된 유저
+            router.push("/find");
+          }
+        });
     } catch (error) {
-      console.log("error!");
+      console.error(error);
     }
   }, []);
 
-  const getProvider = async () => {
-    const provider = await new ethers.providers.Web3Provider(window.ethereum);
+  const getProvider = () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
 
     setProvider(provider);
 
@@ -81,6 +126,8 @@ const SignIn = () => {
     setWalletAddress(result[0]);
     setCurrentBalance(Number(result[1]));
     setChainId(result[2]);
+
+    return result[0];
   };
 
   return (
