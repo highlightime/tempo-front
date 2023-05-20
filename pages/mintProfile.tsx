@@ -151,7 +151,6 @@ const SignUp = () => {
           <FormControl w="50vw" mt="5" isRequired>
             <FormLabel>Birth</FormLabel>
             <Input type="date" {...register("birth")} />
-            <FormHelperText>We'll never share your email.</FormHelperText>
           </FormControl>
           <FormControl w="50vw" mt="5" isRequired>
             <FormLabel>Gender</FormLabel>

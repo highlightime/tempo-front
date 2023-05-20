@@ -60,7 +60,7 @@ const Find = () => {
             </Flex>
           </Box>
         ) : (
-          <Button onClick={getUserInfo}>Let's Find Your Lover</Button>
+          <Button onClick={getUserInfo}>Let&apos;s Find Your Lover</Button>
         )}
       </Flex>
     </Box>
