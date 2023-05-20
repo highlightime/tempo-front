@@ -21,13 +21,13 @@ import { userState, walletState } from "./states";
 import { useRecoilState } from "recoil";
 
 const navItems: NavItem[] = [
-  { name: "Tempo", to: "/" },
-  { name: "Connect Wallet", to: "/connectWallet" },
-  { name: "Mint Profile", to: "/mintProfile" },
-  { name: "Find", to: "/find" },
-  { name: "appointment", to: "/appointment" },
-  { name: "approve", to: "/approveAppointment" },
-  { name: "view appointment", to: "/viewAppointment" },
+  { name: "Tempo", to: "/", requireLogin: false },
+  { name: "Connect Wallet", to: "/connectWallet", requireLogin: false },
+  { name: "Mint Profile", to: "/mintProfile", requireLogin: true },
+  { name: "Find", to: "/find", requireLogin: true },
+  { name: "appointment", to: "/appointment", requireLogin: true },
+  { name: "approve", to: "/approveAppointment", requireLogin: true },
+  { name: "view appointment", to: "/viewAppointment", requireLogin: true },
 ];
 
 const NavLink = (item: NavItem) => (
@@ -63,9 +63,14 @@ const Navbar = () => {
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <Flex>
-            {navItems.map((item) => (
-              <NavLink key={item.name} {...item} />
-            ))}
+            {navItems
+              .filter((item) => {
+                if (email) return item.requireLogin;
+                else return !item.requireLogin;
+              })
+              .map((item) => (
+                <NavLink key={item.name} {...item} />
+              ))}
           </Flex>
 
           <Flex alignItems={"center"}>
@@ -74,7 +79,7 @@ const Navbar = () => {
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               </Button>
 
-              {email ? (
+              {email && (
                 <Menu>
                   <MenuButton
                     as={Button}
@@ -108,10 +113,6 @@ const Navbar = () => {
                     <MenuItem onClick={signOut}>Logout</MenuItem>
                   </MenuList>
                 </Menu>
-              ) : (
-                <Flex alignItems="center" _hover={{ cursor: "pointer" }}>
-                  <Box onClick={() => router.push("/signIn")}>Sign In</Box>
-                </Flex>
               )}
             </Stack>
           </Flex>
