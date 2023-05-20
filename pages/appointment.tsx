@@ -27,7 +27,10 @@ const Appointment = () => {
   };
 
   // TODO
-  const [receiver, sender] = ["0x7eB20590eF39cea2041B7570233607f15da82a3b", "sender"];
+  const [receiver, sender] = [
+    "0x7eB20590eF39cea2041B7570233607f15da82a3b",
+    "sender",
+  ];
 
   const { loaded, coordinates, error } = useGeolocation();
   const [centerPosition, setCenterPosition] =
@@ -50,7 +53,7 @@ const Appointment = () => {
   const searchAddress = ({ lat, lng }: Coordinates) => {
     const geocoder = new kakao.maps.services.Geocoder();
 
-    geocoder.coord2Address(lng, lat, (result, status) => {
+    geocoder?.coord2Address(lng, lat, (result, status) => {
       if (status === kakao.maps.services.Status.OK) {
         const {
           address: { address_name },
@@ -69,7 +72,7 @@ const Appointment = () => {
 
     console.log(data);
 
-    checkWalletIsConnected(address, receiver, data.time);
+    // checkWalletIsConnected(address, receiver, data.time);
   };
 
   const checkWalletIsConnected = async (location, receiver, atime) => {
@@ -87,7 +90,7 @@ const Appointment = () => {
     if (accounts.length !== 0) {
       // wallet connect
       const account = accounts[0];
-      
+
       // createAppointment
       createAppointment(location, receiver, atime);
     } else {
@@ -95,7 +98,7 @@ const Appointment = () => {
     }
   };
 
-  async function createAppointment(location, receiver,atime) {
+  async function createAppointment(location, receiver, atime) {
     try {
       const { ethereum } = window;
 
@@ -106,9 +109,9 @@ const Appointment = () => {
         //console.log(CONTRACT_ADDRESS,currentAccount);
 
         const appointmentContract = new ethers.Contract(
-            CONTRACT_ADDRESS,
-            CONTRACT_ABI,
-            signer
+          CONTRACT_ADDRESS,
+          CONTRACT_ABI,
+          signer
         );
 
         let createAppointmentTxn = await appointmentContract.createAppointment(
@@ -119,7 +122,6 @@ const Appointment = () => {
         );
         // wait transaction mined
         await createAppointmentTxn.wait();
-      
       } else {
         console.log("Ether obj not exists");
       }

@@ -8,13 +8,17 @@ const FindHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const userInfo: UserInfo = {
     nickname: "Welchs",
-    age: 25,
+    birth: "1997-04-18",
     gender: "male",
     isHealthy: true,
-    oneLine: "I like to drink Welch's. Would you like to drink with me?",
   };
 
-  res.status(200).json({ imageSrc: result.request.path, userInfo });
+  res
+    .status(200)
+    .json({
+      profileImage: `https://fastly.picsum.photos/${result.request.path}`,
+      ...userInfo,
+    });
 };
 
 export default Handler("GET", FindHandler);

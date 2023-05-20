@@ -1,7 +1,7 @@
 export interface UserInfo {
   nickname: string;
-  age: number;
+  profileImage?: string;
   gender: string;
   isHealthy: boolean;
-  oneLine: string;
+  birth: string;
 }

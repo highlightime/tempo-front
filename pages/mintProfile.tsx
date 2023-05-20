@@ -64,9 +64,9 @@ const SignUp = () => {
       data: formData,
     });
 
-    router.push("/mintProgress")
+    router.push("/mintProgress");
 
-    handleImg(data)
+    handleImg(data);
   };
 
   const handleImg = async (data: SignUpFormProps) => {
@@ -81,7 +81,9 @@ const SignUp = () => {
       },
     };
 
-    const client = new NFTStorage({ token: process.env.NFT_STORAGE_API_KEY || "" });
+    const client = new NFTStorage({
+      token: process.env.NFT_STORAGE_API_KEY || "",
+    });
     //console.log(process.env.NFT_STORAGE_API_KEY)
     const metadata = await client.store(nft);
 
@@ -89,7 +91,7 @@ const SignUp = () => {
     console.log("Metadata URI: ", metadata.url);
 
     checkWalletIsConnected(metadata.url);
-  }
+  };
 
   const checkWalletIsConnected = async (metadataUrl) => {
     const { ethereum } = window;
@@ -106,15 +108,15 @@ const SignUp = () => {
     if (accounts.length !== 0) {
       // wallet connect
       const account = accounts[0];
-      
+
       // mint image we made
-      mintNftHandler(metadataUrl,account);
+      mintNftHandler(metadataUrl, account);
     } else {
       console.log("No Authrized Account.");
     }
   };
 
-  async function mintNftHandler(metadataUrl,currentAccount) {
+  async function mintNftHandler(metadataUrl, currentAccount) {
     try {
       const { ethereum } = window;
 
@@ -125,18 +127,14 @@ const SignUp = () => {
         //console.log(CONTRACT_ADDRESS,currentAccount);
 
         const nftContract = new ethers.Contract(
-            CONTRACT_ADDRESS,
-            CONTRACT_ABI,
-            signer
+          CONTRACT_ADDRESS,
+          CONTRACT_ABI,
+          signer
         );
 
-        let nftTxn = await nftContract.mintProfile(
-          currentAccount,
-          metadataUrl
-        );
+        let nftTxn = await nftContract.mintProfile(currentAccount, metadataUrl);
         // wait transaction mined
         await nftTxn.wait();
-      
       } else {
         console.log("Ether obj not exists");
       }
