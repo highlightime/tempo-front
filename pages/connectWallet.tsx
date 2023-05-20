@@ -12,8 +12,8 @@ import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import UserAuth from "../contracts/UserAuth.json";
 import { UserAuthContractAddr } from "../contracts/ContractAddress";
-import { walletState } from "../components/states";
-import { useRecoilState } from "recoil";
+import { userState, walletState } from "../components/states";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 interface UserProps {
   email: string;
@@ -25,6 +25,7 @@ const SignIn = () => {
   const router = useRouter();
 
   const [walletAddress, setWalletAddress] = useRecoilState(walletState);
+  const email = useRecoilValue(userState);
 
   const { register, handleSubmit } = useForm<UserProps>();
   const [provider, setProvider] = useState<ethers.providers.Web3Provider>();
@@ -35,6 +36,10 @@ const SignIn = () => {
 
   const CONTRACT_ADDRESS = UserAuthContractAddr();
   const CONTRACT_ABI = UserAuth.abi;
+
+  useEffect(() => {
+    if (email) router.push("/");
+  }, []);
 
   const onSubmit = async (data: UserProps) => {
     const contract = new ethers.Contract(
